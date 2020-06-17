@@ -1,17 +1,22 @@
-import React from 'react';
-import { HashRouter, Route, Redirect } from 'react-router-dom';
-import Login from './views/login/Login';
-import { Provider } from 'react-redux';
-import { store } from './store';
-import Counter from './views/counter/Counter';
+import React, { useMemo } from 'react';
+import { HashRouter, Switch } from 'react-router-dom';
+
+import { useGlobalState } from './store';
+import routes, { RouteWithSubRoutes } from './route';
 
 export default function App() {
-  return (
-    <Provider store={store}>
+  const [state] = useGlobalState();
+  const token = state.token;
+  return useMemo(
+    () => (
       <HashRouter>
-        <Route path='/login' component={Login} />
-        <Route path='/counter' component={Counter} />
+        <Switch>
+          {routes.map((route, i) => (
+            <RouteWithSubRoutes key={i} {...route} />
+          ))}
+        </Switch>
       </HashRouter>
-    </Provider>
+    ),
+    [],
   );
 }

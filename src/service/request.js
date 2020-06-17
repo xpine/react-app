@@ -4,4 +4,14 @@ const instance = axios.create({
   timeout: 60000,
 });
 
+instance.interceptors.response.use(
+  (response) => {
+    if (response.data.code === 0) {
+      return Promise.resolve(response.data.data);
+    } else {
+      return Promise.reject(response.data);
+    }
+  },
+  (error) => Promise.reject(error),
+);
 export default instance;

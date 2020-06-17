@@ -1,15 +1,15 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useGlobalState } from '../../store';
+import Test from './Text';
 
 export default function Counter() {
-  const count = useSelector((state) => state);
-  const dispatch = useDispatch();
+  const [state, dispatch] = useGlobalState();
   return (
     <div>
-      <p>{count.count}</p>
+      <p>{state.count}</p>
       <button onClick={() => dispatch({ type: 'increase' })}>+</button>
       <button onClick={() => dispatch({ type: 'decrease' })}>-</button>
-      <a href='#/login'>login</a>
+      <Test />
     </div>
   );
 }

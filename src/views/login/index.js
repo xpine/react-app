@@ -1,10 +1,10 @@
 import React from 'react';
 import { Form, Input, Button } from 'antd';
 import service from '../../service';
-import { useSelector } from 'react-redux';
+import { actions, useGlobalState } from '../../store';
 
-export default function Login() {
-  const state = useSelector((state) => state);
+export default function Login(props) {
+  const [, dispatch] = useGlobalState();
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
@@ -13,10 +13,17 @@ export default function Login() {
     wrapperCol: { offset: 8, span: 16 },
   };
   const onFinish = (values) => {
-    console.log('Success:', values);
-    service.login({
-      ...values,
-    });
+    service
+      .login({
+        ...values,
+      })
+      .then((res) => {
+        dispatch({ type: actions.LOGIN_SUCCESS, payload: res });
+        props.history.replace('/counter');
+      })
+      .catch(() => {
+        props.history.replace('/counter');
+      });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -35,7 +42,6 @@ export default function Login() {
         rules={[{ required: true, message: 'Please input your username!' }]}>
         <Input />
       </Form.Item>
-      {state.x.y}
       <Form.Item
         label='Password'
         name='password'
