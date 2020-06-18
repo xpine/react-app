@@ -1,8 +1,9 @@
 import { produce } from 'immer';
 import { actions } from './actions';
+import token from '../utils/token';
 export const initialState = {
   count: 0,
-  token: null,
+  token: token.get(),
   x: {
     y: 0,
   },
@@ -21,6 +22,11 @@ export const reducer = (state = initialState, action) =>
         break;
       case actions.LOGIN_SUCCESS:
         draft.token = action.payload.access_token;
+        token.set(draft.token);
+        break;
+      case actions.LOGOUT_SUCCESS:
+        draft.token = null;
+        token.remove();
         break;
       default:
         break;

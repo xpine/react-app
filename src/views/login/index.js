@@ -19,10 +19,10 @@ export default function Login(props) {
       })
       .then((res) => {
         dispatch({ type: actions.LOGIN_SUCCESS, payload: res });
-        props.history.replace('/counter');
+        props.history.replace('/');
       })
       .catch(() => {
-        props.history.replace('/counter');
+        props.history.replace('/');
       });
   };
 
