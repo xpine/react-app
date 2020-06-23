@@ -9,8 +9,7 @@ import { useGlobalState, actions } from '../store';
 const { Header, Content } = Layout;
 
 export default function MyLayout(props) {
-  const [dispatch] = useGlobalState();
-
+  const [, dispatch] = useGlobalState();
   const handleClick = useMemo(
     () => () => {
       Modal.confirm({
@@ -49,8 +48,8 @@ export default function MyLayout(props) {
             />
           </Row>
         </Header>
-        <Content style={{ padding: 20, background: '#eee' }}>
-          <div style={{ height: '100%', background: '#fff' }}>
+        <Content>
+          <div style={{ height: '100%', background: '#fff', overflow: 'auto' }}>
             <Switch>
               {props.routes.map((route, i) => (
                 <RouteWithSubRoutes key={i} {...route} />

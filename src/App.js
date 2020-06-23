@@ -1,9 +1,12 @@
 import React, { useMemo } from 'react';
 import { HashRouter, Switch } from 'react-router-dom';
+import { ConfigProvider } from 'antd';
+
+import { SWRConfig } from 'swr';
+import request from './service/request';
 
 // import { useGlobalState } from './store';
 import routes, { RouteWithSubRoutes } from './route';
-import { SWRConfig } from 'swr';
 
 export default function App() {
   return useMemo(
@@ -12,14 +15,17 @@ export default function App() {
         value={{
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
+          fetcher: request.get,
         }}>
-        <HashRouter>
-          <Switch>
-            {routes.map((route, i) => (
-              <RouteWithSubRoutes key={i} {...route} />
-            ))}
-          </Switch>
-        </HashRouter>
+        <ConfigProvider componentSize={'small'}>
+          <HashRouter>
+            <Switch>
+              {routes.map((route, i) => (
+                <RouteWithSubRoutes key={i} {...route} />
+              ))}
+            </Switch>
+          </HashRouter>
+        </ConfigProvider>
       </SWRConfig>
     ),
     [],

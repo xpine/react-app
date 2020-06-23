@@ -6,6 +6,7 @@ import Test from '../views/counter/Text';
 import MyLayout from '../views/Layout';
 import { useGlobalState } from '../store';
 import User from '../views/user';
+import Role from '../views/role';
 
 export const Menus = [
   {
@@ -37,7 +38,7 @@ export const Menus = [
   },
   {
     path: '/role',
-    component: Test,
+    component: Role,
     exact: true,
     meta: {
       auth: false,
