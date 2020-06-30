@@ -7,6 +7,7 @@ export const initialState = {
   x: {
     y: 0,
   },
+  user: null,
 };
 export const reducer = (state = initialState, action) =>
   produce(state, (draft) => {
@@ -21,7 +22,8 @@ export const reducer = (state = initialState, action) =>
         draft.x.y -= 1;
         break;
       case actions.LOGIN_SUCCESS:
-        draft.token = action.payload.access_token;
+        draft.token = action.payload.token;
+        draft.user = action.payload.user;
         token.set(draft.token);
         break;
       case actions.LOGOUT_SUCCESS:

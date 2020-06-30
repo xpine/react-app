@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Redirect } from 'react-router-dom';
+import { Spin } from 'antd';
+
 import Login from '../views/login';
 import Counter from '../views/counter';
 import Test from '../views/counter/Text';
 import MyLayout from '../views/Layout';
-import { useGlobalState } from '../store';
+import { useGlobalState, actions } from '../store';
 import User from '../views/user';
 import Role from '../views/role';
+import RoleMenu from '../views/role/Menu';
+import NotFound from '../views/404';
+import service from '../service';
 
 export const Menus = [
   {
@@ -16,15 +21,7 @@ export const Menus = [
     meta: {
       auth: true,
       title: '工作台',
-    },
-  },
-  {
-    path: '/counter',
-    component: Counter,
-    exact: true,
-    meta: {
-      title: '计算器',
-      auth: true,
+      role: 1,
     },
   },
   {
@@ -34,6 +31,7 @@ export const Menus = [
     meta: {
       auth: true,
       title: '用户管理',
+      role: 2,
     },
   },
   {
@@ -41,24 +39,37 @@ export const Menus = [
     component: Role,
     exact: true,
     meta: {
-      auth: false,
+      auth: true,
       title: '角色管理',
+      role: 3,
     },
   },
   {
-    path: '/theme',
-    component: Test,
+    path: '/role/:id',
+    component: RoleMenu,
+    exact: true,
     meta: {
-      auth: false,
-      title: '主题管理',
+      auth: true,
+      title: '角色配置',
+      hidden: true,
+      role: 58,
     },
   },
   {
-    path: '/topic',
+    path: '/project',
     component: Test,
     meta: {
+      auth: true,
+      title: '项目管理',
+      role: 4,
+    },
+  },
+  {
+    path: '/404',
+    component: NotFound,
+    meta: {
       auth: false,
-      title: '话题管理',
+      hidden: true,
     },
   },
 ];
@@ -78,6 +89,7 @@ export default [
       auth: false,
     },
   },
+
   {
     path: '/',
     component: MyLayout,
@@ -89,24 +101,53 @@ export default [
 ];
 
 export function RouteWithSubRoutes(route) {
-  const [{ token }] = useGlobalState();
-
+  const [{ token, user }, dispatch] = useGlobalState();
+  const [loading, setLoading] = useState(token && !user);
+  useEffect(() => {
+    if (token && !user) {
+      service.user.getCurrent().then((res) => {
+        dispatch({
+          type: actions.LOGIN_SUCCESS,
+          payload: {
+            token,
+            user: res,
+          },
+        });
+        setLoading(false);
+      });
+    }
+  }, [token, user, dispatch]);
   return (
-    <Route
-      path={route.path}
-      render={(props) => {
-        // 需要鉴权并且token不存在的情况下跳转登录页
-        if (route.meta && route.meta.auth) {
-          if (!token) {
-            return <Redirect to='/login' />;
-          }
-        }
-        // 登录页存在token的情况下 跳转到首页
-        if (token && route.path === '/login') {
-          return <Redirect to='/' />;
-        }
-        return <route.component {...props} routes={route.routes}></route.component>;
-      }}
-    />
+    <div>
+      {loading ? (
+        <div style={{ padding: 100, textAlign: 'center' }}>
+          <Spin />
+        </div>
+      ) : (
+        <Route
+          path={route.path}
+          render={(props) => {
+            // 需要鉴权并且token不存在的情况下跳转登录页
+            if (route.meta && route.meta.auth) {
+              if (!token) {
+                return <Redirect to='/login' />;
+              }
+            }
+            // 登录页存在token的情况下 跳转到首页
+            if (token && route.path === '/login') {
+              return <Redirect to='/' />;
+            }
+            // 判断用户权限是否存在
+            if (route.meta && route.meta.role) {
+              const userMenuIds = (user && user.role && user.role.menus.map((m) => m.id)) || [];
+              if (userMenuIds.indexOf(route.meta.role) === -1) {
+                return <Redirect to='/404' />;
+              }
+            }
+            return <route.component {...props} routes={route.routes}></route.component>;
+          }}
+        />
+      )}
+    </div>
   );
 }

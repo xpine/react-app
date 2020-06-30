@@ -18,11 +18,22 @@ export default function Login(props) {
         ...values,
       })
       .then((res) => {
-        dispatch({ type: actions.LOGIN_SUCCESS, payload: res });
-        props.history.replace('/');
-      })
-      .catch(() => {
-        props.history.replace('/');
+        service.user
+          .getCurrent({
+            headers: {
+              Authorization: `Bearer ${res.access_token}`,
+            },
+          })
+          .then((user) => {
+            dispatch({
+              type: actions.LOGIN_SUCCESS,
+              payload: {
+                token: res.access_token,
+                user,
+              },
+            });
+            props.history.replace('/');
+          });
       });
   };
 

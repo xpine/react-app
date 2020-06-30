@@ -9,7 +9,7 @@ import { useGlobalState, actions } from '../store';
 const { Header, Content } = Layout;
 
 export default function MyLayout(props) {
-  const [, dispatch] = useGlobalState();
+  const [{ user }, dispatch] = useGlobalState();
   const handleClick = useMemo(
     () => () => {
       Modal.confirm({
@@ -25,21 +25,22 @@ export default function MyLayout(props) {
     },
     [props, dispatch],
   );
-
+  const userMenuIds = (user && user.role && user.role.menus.map((m) => m.id)) || [];
   return useMemo(() => {
-    console.log('layout');
     return (
       <Layout style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }}>
         <Header>
           <Row align='middle'>
-            <div className='logo' />
             <Col flex={1}>
               <Menu theme='dark' mode='horizontal' defaultSelectedKeys={[props.location.pathname]}>
-                {props.routes.map((route, i) => (
-                  <Menu.Item key={route.path}>
-                    <Link to={route.path}>{route.meta.title}</Link>
-                  </Menu.Item>
-                ))}
+                {props.routes.map((route, i) =>
+                  route.meta.hidden ||
+                  (route.meta.role && userMenuIds.indexOf(route.meta.role) === -1) ? null : (
+                    <Menu.Item key={route.path}>
+                      <Link to={route.path}>{route.meta.title}</Link>
+                    </Menu.Item>
+                  ),
+                )}
               </Menu>
             </Col>
             <Button
@@ -59,5 +60,5 @@ export default function MyLayout(props) {
         </Content>
       </Layout>
     );
-  }, [handleClick, props]);
+  }, [handleClick, props, userMenuIds]);
 }
