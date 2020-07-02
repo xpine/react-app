@@ -3,8 +3,8 @@ import { Route, Redirect } from 'react-router-dom';
 import { Spin } from 'antd';
 
 import Login from '../views/login';
-import Counter from '../views/counter';
-import Test from '../views/counter/Text';
+
+import ProjectList from '../views/project';
 import MyLayout from '../views/Layout';
 import { useGlobalState, actions } from '../store';
 import User from '../views/user';
@@ -12,16 +12,28 @@ import Role from '../views/role';
 import RoleMenu from '../views/role/Menu';
 import NotFound from '../views/404';
 import service from '../service';
+import Project from '../views/project/Project';
 
 export const Menus = [
   {
     path: '/',
-    component: Test,
+    component: ProjectList,
     exact: true,
     meta: {
       auth: true,
       title: '工作台',
       role: 1,
+    },
+  },
+  {
+    path: '/project/:id',
+    component: Project,
+    exact: true,
+    meta: {
+      auth: true,
+      title: '项目配置',
+      role: 1,
+      hidden: true,
     },
   },
   {
@@ -56,15 +68,6 @@ export const Menus = [
     },
   },
   {
-    path: '/project',
-    component: Test,
-    meta: {
-      auth: true,
-      title: '项目管理',
-      role: 4,
-    },
-  },
-  {
     path: '/404',
     component: NotFound,
     meta: {
@@ -82,14 +85,6 @@ export default [
       auth: false,
     },
   },
-  {
-    path: '/test',
-    component: Test,
-    meta: {
-      auth: false,
-    },
-  },
-
   {
     path: '/',
     component: MyLayout,
