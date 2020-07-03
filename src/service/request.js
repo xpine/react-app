@@ -10,7 +10,6 @@ instance.interceptors.request.use((config) => {
   if (!config.headers.Authorization) {
     config.headers.Authorization = `Bearer ${utils.token.get()}`;
   }
-
   return config;
 });
 instance.interceptors.response.use(

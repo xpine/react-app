@@ -13,6 +13,7 @@ import RoleMenu from '../views/role/Menu';
 import NotFound from '../views/404';
 import service from '../service';
 import Project from '../views/project/Project';
+import OSS from '../views/OSS';
 
 export const Menus = [
   {
@@ -26,7 +27,18 @@ export const Menus = [
     },
   },
   {
-    path: '/project/:id',
+    path: '/project/OSS',
+    component: OSS,
+    exact: true,
+    meta: {
+      auth: true,
+      role: 1,
+      hidden: true,
+      title: 'OSS',
+    },
+  },
+  {
+    path: '/project/:id/edit',
     component: Project,
     exact: true,
     meta: {

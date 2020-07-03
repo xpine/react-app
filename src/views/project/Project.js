@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import useSWR from 'swr';
-import { Form, Input, Spin, Select, Button } from 'antd';
+import { Form, Input, Spin, Select, Button, message } from 'antd';
 import service from '../../service';
 const { Option } = Select;
 
@@ -21,7 +21,9 @@ export default function Project(props) {
   };
 
   const onFinish = (values) => {
-    service.project.update(props.match.params.id, values);
+    service.project.update(props.match.params.id, values).then(() => {
+      message.success('修改成功');
+    });
   };
   const handleSearch = (query) => {
     setQuery(query);
