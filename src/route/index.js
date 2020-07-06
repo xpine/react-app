@@ -14,6 +14,7 @@ import NotFound from '../views/404';
 import service from '../service';
 import Project from '../views/project/Project';
 import OSS from '../views/OSS';
+import Chat from '../views/chat';
 
 export const Menus = [
   {
@@ -35,6 +36,17 @@ export const Menus = [
       role: 1,
       hidden: true,
       title: 'OSS',
+    },
+  },
+  {
+    path: '/project/chat',
+    component: Chat,
+    exact: true,
+    meta: {
+      auth: true,
+      role: 1,
+      hidden: true,
+      title: 'chat',
     },
   },
   {

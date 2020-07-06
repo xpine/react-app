@@ -21,7 +21,7 @@ export default function ProjectList(props) {
               />
             }
             actions={
-              user.id === project.id
+              user.id === project.createdBy.id
                 ? [
                     <SettingOutlined
                       key='setting'
@@ -29,13 +29,13 @@ export default function ProjectList(props) {
                     />,
                     <EllipsisOutlined
                       key='ellipsis'
-                      onClick={() => props.history.push(`/project/OSS`)}
+                      onClick={() => props.history.push(`/project/${project.code}`)}
                     />,
                   ]
                 : [
                     <EllipsisOutlined
                       key='ellipsis'
-                      onClick={() => props.history.push(`/project/OSS`)}
+                      onClick={() => props.history.push(`/project/${project.code}`)}
                     />,
                   ]
             }>

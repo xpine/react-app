@@ -5,13 +5,9 @@ import { ConfigProvider } from 'antd';
 import { SWRConfig } from 'swr';
 import request from './service/request';
 
-// import { useGlobalState } from './store';
 import routes, { RouteWithSubRoutes } from './route';
-import { useGlobalState } from './store';
 
 export default function App() {
-  const [{ token }, dispatch] = useGlobalState();
-  console.log(token, 111);
   return useMemo(
     () => (
       <SWRConfig

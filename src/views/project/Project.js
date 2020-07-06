@@ -31,7 +31,10 @@ export default function Project(props) {
   project.memberIds = (project.members && project.members.map((item) => item.id)) || [];
 
   const options = userList.map((user) => (
-    <Option key={user.id} value={user.id} disabled={user.id === project.createdBy.id}>
+    <Option
+      key={user.id}
+      value={user.id}
+      disabled={user.id === (project.createdBy && project.createdBy.id)}>
       {user.username}
     </Option>
   ));
